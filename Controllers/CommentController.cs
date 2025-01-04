@@ -49,7 +49,18 @@ namespace api.Controllers
 
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto commentDto)
+        {
+            var comment = await _commentRepository.UpdateAsync(id, commentDto.ToCommentFromUpdate());
 
-        
+            if (comment == null)
+            {
+                return NotFound("Comment not found");
+            }
+            
+            return Ok(comment.ToCommentDto());
+        }
+   
     }
 }
