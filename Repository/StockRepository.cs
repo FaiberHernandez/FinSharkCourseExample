@@ -2,7 +2,6 @@ using api.Data;
 using api.Dtos.Stock;
 using api.interfaces;
 using api.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
@@ -33,12 +32,12 @@ namespace api.Repository
 
         public async Task<List<Stock>> GetAllAsync()
         {
-            return await _context.Stock.ToListAsync();
+            return await _context.Stock.Include(s => s.Comments).ToListAsync();
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
         {
-            var stockModel = await _context.Stock.FindAsync(id);
+            var stockModel = await _context.Stock.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == id);
             return stockModel;
         }
 
