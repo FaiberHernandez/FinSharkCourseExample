@@ -23,11 +23,12 @@ namespace api.Repository
 
         public async Task<Stock?> DeleteAsync(int id)
         {
-            var StockModel = await _context.Stock.FirstOrDefaultAsync(x => x.Id == id);
-            if (StockModel == null) return null;
-            _context.Stock.Remove(StockModel);
+            var stockModel = await _context.Stock.Include(s => s.Comments).FirstOrDefaultAsync(x => x.Id == id);
+            if (stockModel == null) return null;
+            _context.Comments.RemoveRange(stockModel.Comments);
+            _context.Stock.Remove(stockModel);
             await _context.SaveChangesAsync();
-            return StockModel;
+            return stockModel;
         }
 
         public async Task<List<Stock>> GetAllAsync()
@@ -39,6 +40,11 @@ namespace api.Repository
         {
             var stockModel = await _context.Stock.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == id);
             return stockModel;
+        }
+
+        public async Task<bool> StockExists(int id)
+        {
+            return await _context.Stock.AnyAsync(s => s.Id == id);
         }
 
         public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto stockDto)
