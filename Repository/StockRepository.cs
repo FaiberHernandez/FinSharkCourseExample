@@ -34,7 +34,7 @@ namespace api.Repository
 
         public async Task<List<Stock>> GetAllAsync(QueryObject query)
         {
-            var stocks = _context.Stocks.Include(s => s.Comments).AsQueryable();
+            var stocks = _context.Stocks.Include(s => s.Comments).ThenInclude(c => c.AppUser).AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.Symbol))
             {
                 stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));

@@ -22,7 +22,7 @@ namespace api.Controllers
         public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
             var stocks = await _stockRepository.GetAllAsync(query);
-            var stocksDto = stocks.Select(stock => stock.ToStockDto());
+            var stocksDto = stocks.Select(stock => stock.ToStockDto()).ToList();
             return Ok(stocksDto);
         }
 
