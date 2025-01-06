@@ -63,11 +63,11 @@ namespace api.Controllers
                 var roleResult = await _userManager.AddToRoleAsync(newUser, "User");
 
                 if(!roleResult.Succeeded) return StatusCode(500, roleResult.Errors);
-                
+
                 return Ok(new NewUserDto
                 {
-                    UserName = newUser.UserName,
-                    Email = newUser.Email,
+                    UserName = newUser.UserName!,
+                    Email = newUser.Email!,
                     Token = _tokenService.CreateToken(newUser)
                 });
                 
